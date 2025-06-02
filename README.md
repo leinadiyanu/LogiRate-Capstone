@@ -2,7 +2,7 @@
 
 **LogiRate is an interstate transport fare comparison platform designed for passengers to compare prices and services offered by different interstate transport companies.**
 
-## Table of Contents
+## 📍Table of Contents
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
 - [Installation](#-installation)
@@ -10,17 +10,17 @@
 - [Project Structure](#-project-structure)
 - [Team](#-team)
 
-## Features
+## 📍Features
 
-## Tech Stack
+## 📍Tech Stack
 
-## Installation 
+## 📍Installation 
 
-## API Documentation 
+## 📍API Documentation 
 
-## Project Structure 
+## 📍Project Structure 
 
-## Team
+## 📍Team
 - Daniel AKANDE
 - Adebimpe ADENIYI
 - Deborah AJULO
