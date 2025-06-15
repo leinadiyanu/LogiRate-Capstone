@@ -1,5 +1,10 @@
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const options = {
     definition: {
@@ -15,9 +20,10 @@ const options = {
                 },
             ],
     },
-    apis: ['../routes/authRoutes', './routes/reviewRoutes.js', './routes/vendorRoutes.js']
+    apis: [`${__dirname}/../routes/*.js`]
 };
 
 const swaggerSpec = swaggerJsdoc(options);
+// console.log('Swagger paths:', JSON.stringify(swaggerSpec.paths, null, 2));
 
 export {swaggerUi, swaggerSpec};
