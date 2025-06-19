@@ -1,17 +1,52 @@
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 
-// const vendorSchema = new mongoose.Schema({
-//     name: {
-//       type: String,
-//       required: true,
-//     },
-//     locations: [String], 
-//     price_per_kg: Number,
-//     rating: Number,
-//     contact: {
-//       phone: String,
-//       email: String,
-//     },
-//   });
+const { Schema } = mongoose;
 
-//   export default mongoose.model('Vendor', vendorSchema)
+const vendorSchema = new Schema({
+ name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  logo: {
+    type: String, // URL to vendor logo
+  },
+  description: {
+    type: String,
+    trim: true,
+  },
+  services: {
+    type: [String], // e.g., ['Same Day', 'Interstate']
+  },
+  areasCovered: {
+    type: [String], // e.g., ['Lagos', 'Abuja']
+    required: true,
+  },
+  pricingStructure: [{
+    serviceType: { type: String },      // e.g., "Same Day"
+    pricePerKg: { type: Number },       // optional
+    baseFee: { type: Number },          // optional
+    distanceRate: { type: Number },     // optional
+    notes: { type: String }             // optional
+  }],
+  contactInfo: {
+    email: { type: String },
+    phone: { type: String },
+    website: { type: String },
+    address: { type: String },
+  },
+  rating: {
+    type: Number, // average rating
+    default: 0,
+  },
+  numberOfRatings: {
+    type: Number,
+    default: 0,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+}, { timestamps: true });
+
+export default mongoose.model('Vendor', vendorSchema)

@@ -1,7 +1,8 @@
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { verifyToken } from '../utils/token.js';
 
 dotenv.config();
+
 export const authenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -9,7 +10,7 @@ export const authenticate = (req, res, next) => {
   }
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = verifyToken(token);
     req.user = decoded;
     next();
   } catch (err) {

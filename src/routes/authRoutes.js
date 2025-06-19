@@ -1,14 +1,14 @@
 import express from 'express';
-import { register, login, getProfile } from '../controllers/authController.js';
-import { authenticate } from '../middlewares/authMiddleware.js';
+import { register, login, forgotPassword, resetPassword } from '../controllers/authController.js';
 
 const router = express.Router();
 
 /**
  * @swagger
- * /register:
+ * /auth/register:
  *   post:
  *     summary: Register a new user
+ *     tags: [Auth]
  *     description: Creates a new user account with first name, surname, email, and password.
  *     requestBody:
  *       required: true
@@ -20,6 +20,7 @@ const router = express.Router();
  *               - firstName
  *               - surname
  *               - email
+ *               - address
  *               - password
  *               - confirmPassword
  *             properties:
@@ -57,9 +58,10 @@ router.post('/register', register);
 
 /**
  * @swagger
- * /login:
+ * /auth/login:
  *   post:
  *     summary: User login
+ *     tags: [Auth]
  *     description: Logs in a user using email and password, and returns a JWT token along with user details.
  *     requestBody:
  *       required: true
@@ -101,6 +103,7 @@ router.post('/login', login);
  * /profile:
  *   get:
  *     summary: Get the authenticated user's profile
+ *     tags: [Auth]
  *     description: Returns the user's profile details including first name, surname, and email/username.
  *     responses:
  *       200:
@@ -119,42 +122,86 @@ router.post('/login', login);
  *       404:
  *         description: User not found
  */
-router.get('/profile', authenticate, getProfile)
 
-// router.post('/password-reset', passwordReset)
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Request a password reset link
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Reset link sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password reset link sent
+ *       404:
+ *         description: Email not found
+ *       500:
+ *         description: Server error
+ */
+router.post('/forgot-password', forgotPassword);
+
+/**
+ * @swagger
+ * /auth/reset-password/{token}:
+ *   post:
+ *     summary: Reset user password using token
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Reset token from email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newPassword
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: myNewSecurePassword123
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password has been reset
+ *       400:
+ *         description: Invalid or expired token
+ *       500:
+ *         description: Server error
+ */
+router.post('/reset-password/:token', resetPassword);
 
 export default router;
-
-
-
-
-
-
-// import express from "express";
-// import bcrypt from "bcryptjs";
-// import jwt from "jsonwebtoken";
-// // import db from "../";
-
-// const router = express.Router();
-
-
-// router.post("/signup", (req, res) => {
-//     const {name, email, password, confirmPassword} = req.body;
-//     console.log(name, email, password, confirmPassword);
-//     console.log(req.method)
-//     res.sendStatus(201);
-// });
-
-// router.post("/login", (req, res) => {
-//     const {email, password} = req.body;
-//     console.log(email, password)
-//     res.sendStatus(201);
-// });
-
-// router.post("/reset", (req, res) => {
-//     const {email} = req.body;
-//     console.log(email)
-//     res.sendStatus(201)
-// });
-
-// export default router
