@@ -17,3 +17,11 @@ export const authenticate = (req, res, next) => {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
+
+export const authorizeAdmin = (req, res, next) => {
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ message: 'Access denied: Admins only' });
+  }
+  next();
+};
+

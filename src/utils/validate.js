@@ -2,16 +2,16 @@ import Joi from 'joi';
 
 export const registerValidation = Joi.object({
   first: Joi.string().min(3).required(),
-  surname: Joi.string().min(3),
+  surname: Joi.string().allow(''),
   email: Joi.string().email().required(),
-  address: Joi.string().min(5),
+  address: Joi.string().allow(''),
   password: Joi.string().min(6).required(),
   confirmPassword: Joi.string()
     .required()
     .valid(Joi.ref('password'))
     .label('Confirm password')
     .messages({
-      'any.only': '{{#label}} does not match password',
+      'any.only': '{#label} does not match password',
     })
 });
 

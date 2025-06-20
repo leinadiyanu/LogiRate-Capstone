@@ -11,24 +11,24 @@ export const register = async (req, res, next) => {
     // console.log(req.body)
     const { first, surname, email, address, password, confirmPassword } = req.body;
 
-    const { error } = registerValidation.validate( first, surname, email, address, password, confirmPassword );
+    const { error } = registerValidation.validate(req.body);
 
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
 
     const existingUser = await User.findOne({ email });  //Checks database for email.
-    
     if (existingUser) return res.status(409).json({ message: 'Email already registered' });
 
-    // if (password !== confirmPassword) return res.status(400).json({message: 'Password do not match'})
-
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ name: {first, surname}, email, address, password: hashedPassword });
+    const role = email === "logirate1@gmail.com" || "danielakande33@gmail.com" ? "admin" : "user";
+    const user = await User.create({ name: {first, surname}, email, address, password: hashedPassword, role });
     
     // const token = generateToken({userId: user._id})
+    const payload = { id: user._id, email: user.email, role: user.role};
+    const token = generateToken(payload);
 
-    res.status(201).json({ message: 'Registration successful', user: { id: user._id, email: user.email }});
+    res.status(201).json({ token, message: 'Registration successful', user: { id: user._id, email: user.email }});
   } catch (err) {
     next(err);
   }
@@ -38,7 +38,7 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const { error } = loginValidation.validate( email, password );
+    const { error } = loginValidation.validate( req.body);
 
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
@@ -51,7 +51,7 @@ export const login = async (req, res, next) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Invalid email or password' });
 
-    const payload = { id: user._id, email: user.email };
+    const payload = { id: user._id, email: user.email, role: user.role};
     const token = generateToken(payload);
 
     res.status(200).json({ token, user: { id: user._id, email: user.email, name: user.name } });

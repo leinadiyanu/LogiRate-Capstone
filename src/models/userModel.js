@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
     name: {
     first: { type: String, required: true },
-    surname: { type: String, required: true },
+    surname: { type: String},
   },
     email: {
         type: String,
@@ -20,6 +20,7 @@ const userSchema = new Schema({
     }, 
     resetToken: String,
     resetTokenExpires: Date,
+
     role: {
     type: String,
     enum: ['admin', 'user'],
