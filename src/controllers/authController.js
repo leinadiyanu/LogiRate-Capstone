@@ -9,7 +9,7 @@ import { loginValidation, registerValidation, resetPasswordValidation } from '..
 export const register = async (req, res, next) => {
   try {
     // console.log(req.body)
-    const { first, surname, email, address, password, confirmPassword } = req.body;
+    const { firstName, surname, email, address, password, confirmPassword } = req.body;
 
     const { error } = registerValidation.validate(req.body);
 
@@ -22,7 +22,7 @@ export const register = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const role = email === "logirate1@gmail.com" || "danielakande33@gmail.com" ? "admin" : "user";
-    const user = await User.create({ name: {first, surname}, email, address, password: hashedPassword, role });
+    const user = await User.create({ name: {firstName, surname}, email, address, password: hashedPassword, role });
     
     // const token = generateToken({userId: user._id})
     const payload = { id: user._id, email: user.email, role: user.role};
