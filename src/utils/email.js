@@ -9,7 +9,7 @@ export const sendEmail = async(user, token) => {
       }
     });
 
-    const resetLink = `http://localhost:5000/reset-password/${token}`; // frontend link
+    const resetLink = `${process.env.frontend-url}/reset-password/${token}`; // frontend link
 
     await transporter.sendMail({
       from: `"LogiRate" <${process.env.EMAIL_USER}> `,
