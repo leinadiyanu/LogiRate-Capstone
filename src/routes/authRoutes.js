@@ -47,10 +47,25 @@ const router = express.Router();
  *               properties:
  *                 token:
  *                   type: string
- *                 userId:
- *                   type: string
+ *                   description: JWT authentication token
+ *                 user:
+ *                   type: object
+ *               properties:
+ *                 id:
+ *                  type: string
+ *                  description: User ID
  *                 email:
- *                   type: string
+ *                  type: string
+ *                  description: User email address
+ *                 name:
+ *                   type: object
+ *                   properties:
+ *                     firstName:
+ *                       type: string
+ *                       description: User's first name
+ *                     surname:
+ *                       type: string
+ *                       description: User's surname
  *       400:
  *         description: Passwords do not match
  *       409:
