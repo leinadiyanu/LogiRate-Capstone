@@ -45,6 +45,8 @@ const router = express.Router();
  *             schema:
  *               type: object
  *               properties:
+ *                 token:
+ *                   type: string
  *                 userId:
  *                   type: string
  *                 email:
