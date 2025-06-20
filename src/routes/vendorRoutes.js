@@ -500,7 +500,8 @@ router.post('/addbulk-routes', authenticate, authorizeAdmin, addBulkRoutes)
  * /vendors/update-vendor/{id}:
  *   patch:
  *     summary: Update a vendor by ID (admin only)
- *     tags: [Vendors]
+ *     tags: 
+ *       - Vendors (Admin)
  *     parameters:
  *       - in: path
  *         name: id
@@ -527,7 +528,8 @@ router.patch('/:id', authenticate, authorizeAdmin, updateVendor);
  * /vendors/delete-vendor/{id}:
  *   delete:
  *     summary: Delete a vendor by ID (admin only)
- *     tags: [Vendors]
+ *     tags: 
+ *       - Vendors (Admin)
  *     parameters:
  *       - in: path
  *         name: id
