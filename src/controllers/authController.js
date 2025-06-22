@@ -21,7 +21,8 @@ export const register = async (req, res, next) => {
     if (existingUser) return res.status(409).json({ message: 'Email already registered' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const role = email === "logirate1@gmail.com" || "danielakande33@gmail.com" ? "admin" : "user";
+    const role = (email === "logirate1@gmail.com" || email === "danielakande33@gmail.com")  ? "admin"  : "user";
+
     const user = await User.create({ name: {firstName, surname}, email, address, password: hashedPassword, role });
     
     // const token = generateToken({userId: user._id})

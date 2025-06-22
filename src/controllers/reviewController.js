@@ -1,4 +1,4 @@
-import Review from '../models/reviewModel.js';
+import VendorsReview from '../models/vendorsReviewModel.js';
 import Vendor from '../models/vendorModel.js';
 
 

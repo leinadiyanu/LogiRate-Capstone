@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const routeSchema = new Schema({
   vendorId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Vendor",
     required: true
   },

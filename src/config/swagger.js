@@ -16,7 +16,7 @@ const options = {
             },
             servers: [
                 {
-                    url: ""
+                    url: "https://logirate-api.onrender.com/"
                 },
             ],
     },

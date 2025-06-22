@@ -31,6 +31,8 @@ const router = express.Router();
  *               email:
  *                 type: string
  *                 format: email
+ *               address:
+ *                 type: string
  *               password:
  *                 type: string
  *                 format: password
@@ -48,24 +50,18 @@ const router = express.Router();
  *                 token:
  *                   type: string
  *                   description: JWT authentication token
+ *                 message:
+ *                   type: string
+ *                   example: Registration successful
  *                 user:
  *                   type: object
- *               properties:
- *                 id:
- *                  type: string
- *                  description: User ID
- *                 email:
- *                  type: string
- *                  description: User email address
- *                 name:
- *                   type: object
  *                   properties:
- *                     firstName:
+ *                     id:
  *                       type: string
- *                       description: User's first name
- *                     surname:
+ *                       description: User ID
+ *                     email:
  *                       type: string
- *                       description: User's surname
+ *                       description: User email address
  *       400:
  *         description: Passwords do not match
  *       409:
@@ -106,10 +102,27 @@ router.post('/register', register);
  *               properties:
  *                 token:
  *                   type: string
- *                 userId:
- *                   type: string
- *                 email:
- *                   type: string
+ *                   description: JWT authentication token
+ *                   example: eyJhbGciOi........
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: 6854d1622412adc9267df746
+ *                     email:
+ *                       type: string
+ *                       format: email
+ *                       example: logiRate@gmail.com
+ *                     name:
+ *                       type: object
+ *                       properties:
+ *                         first:
+ *                           type: string
+ *                           example: Logirate
+ *                         surname:
+ *                           type: string
+ *                           example: ""
  *       401:
  *         description: Invalid email or password
  */
@@ -121,7 +134,7 @@ router.post('/login', login);
  *   get:
  *     summary: Get the authenticated user's profile
  *     tags: [Auth]
- *     description: Returns the user's profile details including first name, surname, and email/username.
+ *     description: Returns the authenticated user's profile including name, email, address, and role.
  *     responses:
  *       200:
  *         description: Successfully retrieved user profile
@@ -130,15 +143,32 @@ router.post('/login', login);
  *             schema:
  *               type: object
  *               properties:
- *                 firstName:
+ *                 _id:
  *                   type: string
- *                 surname:
- *                   type: string
+ *                   example: 6854d1622412adc9267df746
+ *                 name:
+ *                   type: object
+ *                   properties:
+ *                     first:
+ *                       type: string
+ *                       example: Logirate
+ *                     surname:
+ *                       type: string
+ *                       example: "rate"
  *                 email:
  *                   type: string
+ *                   format: email
+ *                   example: logiRate@gmail.com
+ *                 address:
+ *                   type: string
+ *                   example: Nigeria
+ *                 role:
+ *                   type: string
+ *                   example: user
  *       404:
  *         description: User not found
  */
+
 
 /**
  * @swagger

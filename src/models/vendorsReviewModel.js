@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const {Schema} = mongoose
 
-const reviewSchema = new Schema({
+const vendorsReviewSchema = new Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -29,4 +29,4 @@ const reviewSchema = new Schema({
   },
 }, { timestamps: true });
 
-export default mongoose.model('Review', reviewSchema);
+export default mongoose.model('VendorsReview', vendorsReviewSchema);

@@ -1,15 +1,27 @@
 import Vendor from '../models/vendorModel.js';
-import Route from "../models/vendorRoutesModel.js";
+import Route from "../models/routesModel.js";
+
+
+
+//GET all vendors with their routes - public
+export const getAllVendorsWithRoutes = async (req, res) => {
+  try {
+    const vendors = await Vendor.find().populate("routes")
+    
+    res.status(200).json(vendors);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 // GET all vendors – Public
 export const getVendorById = async (req, res) => {
   try {
     // Get vendor and all their routes
-    const vendorId = req.query
-    const vendor = await Vendor.findById(vendorId);
-    const routes = await Route.find({ vendorId: vendorId });
+    const vendorId = req.params.id
+    const vendor = await Vendor.findById(vendorId).populate("routes");
     
-    res.status(200).json({ vendor, routes });
+    res.status(200).json({ vendor });
 
     // const vendors = await Vendor.find().sort({ name: 1 });
     // res.status(200).json(vendors);
@@ -18,107 +30,125 @@ export const getVendorById = async (req, res) => {
 }
 };
 
-//GET all vendors with their routes - public
-export const getAllVendorsWithRoutes = async (req, res) => {
-  try {
-    const vendors = await Vendor.aggregate([
-      {
-        $lookup: {
-          from: "route", // Name of the collection in MongoDB
-          localField: "_id",
-          foreignField: "vendorId",
-          as: "routes"
-        }
-      }
-    ]);
-
-    res.status(200).json(vendors);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-
 // FILTER vendors by city or service – Public
 export const filterVendorsByRoute = async (req, res) => {
   try {
     const {
-      from,
-      to,
-      minPrice,
-      maxPrice,
-      minSeats,
-      departureTime,
-      arrivalTime,
-      vehicleType
-    } = req.query;
-    // console.log(req.query)
-    const matchConditions = [];
+  from,
+  to,
+  minPrice,
+  maxPrice,
+  minSeats,
+  departureTime,
+  arrivalTime,
+  vehicleType
+} = req.query;
 
-    // console.log(matchConditions)
-    if (from) matchConditions.push({ $eq: ["$$route.from", from] });
-    if (to) matchConditions.push({ $eq: ["$$route.to", to] });
-    if (minPrice) matchConditions.push({ $gte: ["$$route.price", parseInt(minPrice)] });
-    if (maxPrice) matchConditions.push({ $lte: ["$$route.price", parseInt(maxPrice)] });
-    if (minSeats) matchConditions.push({ $gte: ["$$route.availableSeats", parseInt(minSeats)] });
-    if (vehicleType) matchConditions.push({ $eq: ["$$route.vehicle.type", vehicleType.toLowerCase()] });
+const matchConditions = [];
 
-    if (departureTime) {
-      matchConditions.push({ $gte: ["$$route.departureTime", departureStart] });
+if (from) {
+  matchConditions.push({
+    $regexMatch: {
+      input: { $toLower: "$$route.from" },
+      regex: from.toLowerCase(),
+      options: "i"
     }
+  });
+}
 
-    if (arrivalTime) {
-      matchConditions.push({ $lte: ["$$route.departureTime", arrivalTime] });
+if (to) {
+  matchConditions.push({
+    $regexMatch: {
+      input: { $toLower: "$$route.to" },
+      regex: to.toLowerCase(),
+      options: "i"
     }
+  });
+}
 
-    const vendors = await Vendor.aggregate([
-      {
-        $lookup: {
-          from: "routes",
-          localField: "_id",
-          foreignField: "vendorId",
-          as: "routes"
-        }
-      },
-      {
-        $addFields: {
-          filteredRoutes: {
-            $filter: {
-              input: "$routes",
-              as: "route",
-              cond: {
-                $and: matchConditions
-              }
-            }
+if (minPrice) {
+  matchConditions.push({
+    $gte: ["$$route.price", Number(minPrice)]
+  });
+}
+
+if (maxPrice) {
+  matchConditions.push({
+    $lte: ["$$route.price", Number(maxPrice)]
+  });
+}
+
+if (minSeats) {
+  matchConditions.push({
+    $gte: ["$$route.availableSeats", Number(minSeats)]
+  });
+}
+
+if (departureTime) {
+  matchConditions.push({
+    $eq: ["$$route.departureTime", departureTime]
+  });
+}
+
+if (arrivalTime) {
+  matchConditions.push({
+    $eq: ["$$route.arrivalTime", arrivalTime]
+  });
+}
+
+if (vehicleType) {
+  matchConditions.push({
+    $eq: ["$$route.vehicle.type", vehicleType]
+  });
+}
+
+const vendors = await Vendor.aggregate([
+  {
+    $lookup: {
+      from: "routes",
+      localField: "_id",
+      foreignField: "vendorId",
+      as: "routes"
+    }
+  },
+  {
+    $addFields: {
+      filteredRoutes: {
+        $filter: {
+          input: "$routes",
+          as: "route",
+          cond: {
+            $and: matchConditions.length > 0 ? matchConditions : [{ $literal: true }]
           }
         }
-      },
-      {
-        $match: {
-          "filteredRoutes.0": { $exists: true }
-        }
-      },
-      {
-        $project: {
-          name: 1,
-          logo: 1,
-          services: 1,
-          contactInfo: 1,
-          rating: 1,
-          numberOfRatings: 1,
-          isVerified: 1,
-          routes: "$filteredRoutes"
-        }
       }
-    ]);
-
+    }
+  },
+  {
+    $match: {
+      "filteredRoutes.0": { $exists: true }
+    }
+  },
+  {
+    $project: {
+      name: 1,
+      logo: 1,
+      services: 1,
+      contactInfo: 1,
+      rating: 1,
+      numberOfRatings: 1,
+      isVerified: 1,
+      routes: "$filteredRoutes"
+    }
+  }
+]);
     res.status(200).json(vendors);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-
+export const allroutes = async (req, res) => {};
 
 // CREATE vendor – Admin only
 export const createVendor = async (req, res) => {
