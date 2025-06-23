@@ -526,54 +526,8 @@ router.post('/add-route', authenticate, authorizeAdmin, createRoute);
  */
 router.post('/addbulk-routes', authenticate, authorizeAdmin, addBulkRoutes)
 
-/**
- * @swagger
- * /vendors/update-vendor/{id}:
- *   patch:
- *     summary: Update a vendor by ID (admin only)
- *     tags: 
- *       - Vendors (Admin)
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID of the vendor to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/VendorUpdate'
- *     responses:
- *       200:
- *         description: Vendor updated successfully
- *       404:
- *         description: Vendor not found
- */
-router.patch('/:id', authenticate, authorizeAdmin, updateVendor);
 
-/**
- * @swagger
- * /vendors/delete-vendor/{id}:
- *   delete:
- *     summary: Delete a vendor by ID (admin only)
- *     tags: 
- *       - Vendors (Admin)
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID of the vendor to delete
- *     responses:
- *       200:
- *         description: Vendor deleted successfully
- *       404:
- *         description: Vendor not found
- */
+router.patch('/:id', authenticate, authorizeAdmin, updateVendor);
 router.delete('/delete-vendor/:id', authenticate, authorizeAdmin, deleteVendor);
 
 export default router;

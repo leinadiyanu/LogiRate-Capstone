@@ -29,4 +29,4 @@ const routeReviewSchema = new Schema({
   },
 }, { timestamps: true });
 
-export default mongoose.model('RouteReview', routeReviewSchema);
+export default mongoose.model('routeReview', routeReviewSchema);

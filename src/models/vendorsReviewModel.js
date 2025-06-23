@@ -29,4 +29,4 @@ const vendorsReviewSchema = new Schema({
   },
 }, { timestamps: true });
 
-export default mongoose.model('VendorsReview', vendorsReviewSchema);
+export default mongoose.model('vendorReview', vendorsReviewSchema);
